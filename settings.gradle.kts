@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Random Unit Defence"
 include(":app")
+include(":a2dg")
  
