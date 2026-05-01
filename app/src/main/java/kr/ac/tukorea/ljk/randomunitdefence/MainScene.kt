@@ -15,27 +15,30 @@ enum class Layer{
     BG, TOWER
 }
 class MainScene(gctx: GameContext) : Scene(gctx){
+    private val originalArcher = Archer(gctx)
+    private var draggingArcher: Archer? = null
     override val clipsRect = true
-    override val world = World(Layer.entries.toTypedArray()).apply{
+    override var world = World(Layer.entries.toTypedArray()).apply{
         add(HorzScrollBackground(gctx, R.mipmap.tower_bg, 0f), Layer.BG)
-        add(Archer(gctx), Layer.TOWER)
+        add(originalArcher, Layer.TOWER)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val pt = gctx.metrics.fromScreen(event.x,event.y)
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (pt.x in Archer.move_x - Archer.WIDTH/2 .. Archer.move_x + Archer.WIDTH/2 && pt.y in Archer.move_y - Archer.HEIGHT/2 .. move_y + Archer.HEIGHT/2){
-
-                Archer.move = true
-
+            if (pt.x in originalArcher.x- Archer.WIDTH/2 .. originalArcher.x + Archer.WIDTH/2 && pt.y in originalArcher.y - Archer.HEIGHT/2 .. originalArcher.y + Archer.HEIGHT/2){
+                val newArcher = Archer(gctx)
+                draggingArcher = newArcher
+                draggingArcher?.touch = true
+                world.add(newArcher, Layer.TOWER)
             }
         }
-        if (event.action == MotionEvent.ACTION_MOVE && Archer.move){
-            move_x = pt.x
-            move_y = pt.y
+        if (event.action == MotionEvent.ACTION_MOVE && draggingArcher?.touch == true){
+            draggingArcher?.x = pt.x
+            draggingArcher?.y = pt.y
         }
         if (event.action == MotionEvent.ACTION_UP){
-            Archer.move = false
+            draggingArcher?.touch = false
         }
         return true
     }

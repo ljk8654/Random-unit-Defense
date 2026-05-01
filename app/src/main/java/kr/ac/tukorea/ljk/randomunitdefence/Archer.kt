@@ -15,8 +15,6 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
     }
 
     override fun update(gctx: GameContext) {
-        x = move_x
-        y = move_y
         syncDstRect()
     }
 

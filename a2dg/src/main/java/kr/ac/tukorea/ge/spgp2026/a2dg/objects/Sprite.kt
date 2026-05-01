@@ -73,6 +73,7 @@ open class Sprite(
     val bitmapHeight: Int
         get() = bitmap.height
 
+    open var touch = false
     override fun update(gctx: GameContext) {
     }
 
