@@ -10,6 +10,7 @@ open class AnimSprite(
     var fps: Float,
     frameCount: Int = 0,
 ) : Sprite(gctx, resId) {
+    protected var leftImage = false
     protected var frameCount = 0
         set(value) {
             val imageWidth = bitmap.width
@@ -53,7 +54,28 @@ open class AnimSprite(
             (frameIndex + 1) * frameWidth,
             frameHeight,
         )
+        if (leftImage) {
+            canvas.save()
 
-        canvas.drawBitmap(bitmap, srcRect, dstRect, null)
+            canvas.scale(
+                -1f,
+                1f,
+                dstRect.centerX().toFloat(),
+                dstRect.centerY().toFloat()
+            )
+
+            canvas.drawBitmap(bitmap, srcRect, dstRect, null)
+
+            canvas.restore()
+        }
+        else{
+            canvas.drawBitmap(bitmap, srcRect, dstRect, null)
+        }
+    }
+    fun leftImage(){
+        leftImage = true
+    }
+    fun rightImage(){
+        leftImage = false
     }
 }

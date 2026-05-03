@@ -17,9 +17,11 @@ class Enemy (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitde
     override fun update(gctx: GameContext) {
         if (x + width / 2f > gctx.metrics.width){
             SPEED *= -1
+            leftImage()
         }
         if (x - width / 2f < 0){
            SPEED *= -1
+            rightImage()
         }
         x += SPEED * gctx.frameTime
         syncDstRect()
