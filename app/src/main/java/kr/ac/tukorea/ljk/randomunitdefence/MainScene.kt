@@ -21,6 +21,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     override var world = World(Layer.entries.toTypedArray()).apply{
         add(HorzScrollBackground(gctx, R.mipmap.tower_bg, 0f), Layer.BG)
         add(originalArcher, Layer.TOWER)
+        add(Enemy(gctx), Layer.TOWER)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

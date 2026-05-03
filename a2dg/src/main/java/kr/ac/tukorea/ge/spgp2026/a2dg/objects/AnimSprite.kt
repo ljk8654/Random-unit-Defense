@@ -53,6 +53,7 @@ open class AnimSprite(
             (frameIndex + 1) * frameWidth,
             frameHeight,
         )
+
         canvas.drawBitmap(bitmap, srcRect, dstRect, null)
     }
 }
