@@ -1,6 +1,7 @@
 package kr.ac.tukorea.ljk.randomunitdefence
 
 import android.graphics.RectF
+import android.util.Log
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ge.spgp2026.a2dg.R
@@ -12,6 +13,8 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
     private var attackTime = ATTACK_INTERVAL
 
+    private var enemy: Enemy? = null
+
     init {
         width = Archer.WIDTH
         height = Archer.HEIGHT
@@ -20,7 +23,18 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
     override fun update(gctx: GameContext) {
         super.update(gctx)
-        attack(gctx)
+        if (enemy != null) {
+            val hitEnemy = enemy
+            attack(gctx)
+            val towerRect = collisionRect
+            val enemyRect = hitEnemy!!.collisionRect
+            if (!RectF.intersects(towerRect, enemyRect)){
+                this.enemy = null
+            }
+
+
+        }
+
         updateCollisionRect()
         syncDstRect()
     }
@@ -36,8 +50,15 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         var move_x = 600f
         var move_y = 400f
     }
+    fun targetOn(enemy: Enemy){
+        this.enemy = enemy
+
+    }
     private fun attack(gctx: GameContext){
         attackTime -= gctx.frameTime
+        Log.v(javaClass.simpleName, "Collision !! Enemy(level=${this.enemy})")
+
+
         if (attackTime > 0f) return
 
         attackTime = ATTACK_INTERVAL

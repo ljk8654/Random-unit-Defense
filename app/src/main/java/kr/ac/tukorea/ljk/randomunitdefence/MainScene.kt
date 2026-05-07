@@ -14,15 +14,17 @@ import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_y
 
 class MainScene(gctx: GameContext) : Scene(gctx){
     enum class Layer{
-        BG, TOWER, ATTACK
+        BG, TOWER, ATTACK, ENEMY, CONTROLLER
     }
+    private val collisionChecker = CollisionChecker(gctx)
     private val originalArcher = Archer(gctx)
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     override var world = World(Layer.entries.toTypedArray()).apply{
         add(HorzScrollBackground(gctx, R.mipmap.tower_bg, 0f), Layer.BG)
+        add(collisionChecker, Layer.CONTROLLER)
         add(originalArcher, Layer.TOWER)
-        add(Enemy(gctx), Layer.TOWER)
+        add(Enemy(gctx), Layer.ENEMY)
         add(Arrow(gctx), Layer.ATTACK)
     }
 
