@@ -8,12 +8,13 @@ import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import android.graphics.RectF
+import kotlin.math.sqrt
 
 class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.arrow), IBoxCollidable, IRecyclable {
     override var x = 600f
     override var y = 300f
     var power = 0
-    var target = null
+    private lateinit var target: Enemy
 
     init {
         width = Arrow.WIDTH
@@ -21,10 +22,11 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
         setCenter(x, y)
     }
 
-    fun init(startX: Float, startY: Float, power: Int): Arrow{
+    fun init(startX: Float, startY: Float, power: Int, target: Enemy): Arrow{
         x = startX
         y = startY
         this.power = power
+        this.target = target
         syncDstRect()
         return this
     }
@@ -37,24 +39,34 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
     }
 
     override fun update(gctx: GameContext) {
-        x -= POWER * gctx.frameTime
+        if (!::target.isInitialized) return
+        val dx = target.x - x
+        val dy = target.y - y
+        val distance = sqrt(dx * dx + dy * dy)
+        val t = POWER / distance
+
+        x =  x + dx * t
+        y =  y + dy * t
+
         syncDstRect()
         if (x + height / 2f < 0f){
             val scene = gctx.scene as? MainScene ?: return
             scene.world.remove(this, MainScene.Layer.ATTACK)
         }
     }
-
+    fun updateBox(target: Enemy){
+        dstRect
+    }
     companion object{
         const val WIDTH = 60f
         const val HEIGHT = 30f
-        const val POWER = 200f
+        const val POWER = 20f
         var move = false
 
-        fun get(gctx: GameContext, x: Float, y: Float, power:Int): Arrow {
-            val scene = gctx.scene as? MainScene ?: return Arrow(gctx).init(x,y,power)
+        fun get(gctx: GameContext, x: Float, y: Float, power:Int, target: Enemy): Arrow {
+            val scene = gctx.scene as? MainScene ?: return Arrow(gctx).init(x,y,power, target)
             val arrow = scene.world.obtain(Arrow::class.java) ?: Arrow(gctx)
-            return arrow.init(x,y,power)
+            return arrow.init(x,y,power, target)
         }
 
     }

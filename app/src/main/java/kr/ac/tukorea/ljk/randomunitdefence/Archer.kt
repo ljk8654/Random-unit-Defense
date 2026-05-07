@@ -24,10 +24,11 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
     override fun update(gctx: GameContext) {
         super.update(gctx)
         if (enemy != null) {
-            val hitEnemy = enemy
-            attack(gctx)
+            val hitEnemy = enemy!!
+
             val towerRect = collisionRect
-            val enemyRect = hitEnemy!!.collisionRect
+            val enemyRect = hitEnemy.collisionRect
+            attack(gctx, hitEnemy)
             if (!RectF.intersects(towerRect, enemyRect)){
                 this.enemy = null
             }
@@ -54,7 +55,7 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         this.enemy = enemy
 
     }
-    private fun attack(gctx: GameContext){
+    private fun attack(gctx: GameContext, enemy: Enemy){
         attackTime -= gctx.frameTime
         Log.v(javaClass.simpleName, "Collision !! Enemy(level=${this.enemy})")
 
@@ -65,7 +66,8 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
         val scene = gctx.scene as? MainScene ?: return
         val power = 200
-        val arrow = Arrow.get(gctx, x-60f, y, power)
+
+        val arrow = Arrow.get(gctx, x-60f, y, power, enemy)
         scene.world.add(arrow, MainScene.Layer.ATTACK)
     }
     private fun updateCollisionRect(){

@@ -60,8 +60,8 @@ open class AnimSprite(
             canvas.scale(
                 -1f,
                 1f,
-                dstRect.centerX().toFloat(),
-                dstRect.centerY().toFloat()
+                dstRect.centerX(),
+                dstRect.centerY()
             )
 
             canvas.drawBitmap(bitmap, srcRect, dstRect, null)

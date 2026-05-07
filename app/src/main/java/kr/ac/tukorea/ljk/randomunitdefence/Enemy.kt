@@ -39,6 +39,6 @@ class Enemy (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitde
         const val HEIGHT = 140f
         var move = false
         var move_x = 600f
-        var move_y = 350f
+        var move_y = 600f
     }
 }
