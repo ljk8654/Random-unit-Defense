@@ -11,10 +11,11 @@ import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move
 import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_x
 import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_y
 
-enum class Layer{
-    BG, TOWER
-}
+
 class MainScene(gctx: GameContext) : Scene(gctx){
+    enum class Layer{
+        BG, TOWER, ATTACK
+    }
     private val originalArcher = Archer(gctx)
     private var draggingArcher: Archer? = null
     override val clipsRect = true
@@ -22,6 +23,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         add(HorzScrollBackground(gctx, R.mipmap.tower_bg, 0f), Layer.BG)
         add(originalArcher, Layer.TOWER)
         add(Enemy(gctx), Layer.TOWER)
+        add(Arrow(gctx), Layer.ATTACK)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
