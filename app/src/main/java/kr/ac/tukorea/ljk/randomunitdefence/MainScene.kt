@@ -10,11 +10,12 @@ import android.view.MotionEvent
 import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move
 import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_x
 import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_y
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Button
 
 
 class MainScene(gctx: GameContext) : Scene(gctx){
     enum class Layer{
-        BG, TOWER, ATTACK, ENEMY, CONTROLLER
+        BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH
     }
     private val collisionChecker = CollisionChecker(gctx)
     private val originalArcher = Archer(gctx)
@@ -26,12 +27,13 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         add(originalArcher, Layer.TOWER)
         add(Enemy(gctx), Layer.ENEMY)
         add(Arrow(gctx), Layer.ATTACK)
+        add(RandomTower(gctx), Layer.TOUCH)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val pt = gctx.metrics.fromScreen(event.x,event.y)
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (pt.x in originalArcher.x- Archer.WIDTH/2 .. originalArcher.x + Archer.WIDTH/2 && pt.y in originalArcher.y - Archer.HEIGHT/2 .. originalArcher.y + Archer.HEIGHT/2){
+            if (pt.x in RandomTower.move_x- RandomTower.WIDTH/2 .. RandomTower.move_x + RandomTower.WIDTH/2 && pt.y in RandomTower.move_y - RandomTower.HEIGHT/2 .. RandomTower.move_y + RandomTower.HEIGHT/2){
                 val newArcher = Archer(gctx)
                 draggingArcher = newArcher
                 draggingArcher?.touch = true
