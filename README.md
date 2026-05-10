@@ -55,7 +55,7 @@ Enemy class
 
 CollisionChecker class
 
-- 타워 공격 범위에 적이 들어오면 타워의 target on 함수에 적을 넘겨 적을 지정하게 하고 투사체가 적에게 닿으면 저거 되게 함
+- 타워 공격 범위에 적이 들어오면 타워의 target on 함수에 적을 넘겨 적을 지정하게 하고 투사체가 적에게 닿으면 제거 되게 함
 
 Enemy road class
 
