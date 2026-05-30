@@ -1,6 +1,5 @@
 package kr.ac.tukorea.ljk.randomunitdefence
 
-
 import android.content.res.AssetManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

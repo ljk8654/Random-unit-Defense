@@ -7,7 +7,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import android.view.MotionEvent
 import android.util.Log
 import kr.ac.tukorea.ljk.randomunitdefence.TiledMapLoader
-
+import kr.ac.tukorea.ljk.randomunitdefence.objs.bg.TiledBackground
 class MainScene(gctx: GameContext) : Scene(gctx){
     init {
         val map = TiledMapLoader.load(gctx.view.context.assets, "map/stage1.tmj")
@@ -27,7 +27,10 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     override var world = World(Layer.entries.toTypedArray()).apply{
-        add(HorzScrollBackground(gctx, R.mipmap.tower_bg, 0f), Layer.BG)
+        add(
+            TiledBackground(gctx, "map/stage1.tmj", tileWidth = 100f, tileHeight = 100f),
+            Layer.BG,
+        )
         add(collisionChecker, Layer.CONTROLLER)
         add(originalArcher, Layer.TOWER)
         add(Enemy(gctx), Layer.ENEMY)

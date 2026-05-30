@@ -16,7 +16,7 @@ class RUDActivity : BaseGameActivity() {
     override val drawsDebugInfo: Boolean = BuildConfig.DEBUG
     override val drawsFpsGraph: Boolean = BuildConfig.DEBUG
     override fun createRootScene(gctx: GameContext): Scene {
-        gctx.metrics.setSize(1600f, 900f)
+        gctx.metrics.setSize(3200f, 1800f)
         return MainScene(gctx)
     }
 }
