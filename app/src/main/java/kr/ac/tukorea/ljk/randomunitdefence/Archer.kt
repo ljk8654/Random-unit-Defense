@@ -8,6 +8,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.R
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
+import kotlin.math.atan2
 
 class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer, 10f, 6), IBoxCollidable{
 
@@ -25,7 +26,11 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         super.update(gctx)
         if (enemy != null) {
             val hitEnemy = enemy!!
-
+            if(hitEnemy.x > x){
+                rightImage()
+            } else{
+                leftImage()
+            }
             val towerRect = collisionRect
             val enemyRect = hitEnemy.collisionRect
             attack(gctx, hitEnemy)
