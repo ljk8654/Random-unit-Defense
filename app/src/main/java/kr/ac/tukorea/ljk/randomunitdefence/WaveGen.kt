@@ -26,17 +26,12 @@ class WaveGen(
     }
 
     private fun spawn() {
-        val x = Random.nextFloat() * gctx.metrics.width
         val y = Random.nextFloat() * gctx.metrics.height
         val enemy = Enemy.get(gctx)
-        enemy.setCenter(x, y)
+        enemy.setCenter(0f, y)
         world.add(enemy, MainScene.Layer.ENEMY)
     }
 
-    //private fun randomType(): .Type {
-     //   val types = Fly.Type.entries
-      //  return types[Random.nextInt(types.size)]
-   // }
 
     companion object {
         private const val SPAWN_INTERVAL = 1.1f
