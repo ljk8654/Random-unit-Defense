@@ -4,16 +4,21 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
-import kr.ac.tukorea.ljk.randomunitdefence.R
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import android.view.MotionEvent
-import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move
-import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_x
-import kr.ac.tukorea.ljk.randomunitdefence.Archer.Companion.move_y
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Button
-
+import android.util.Log
+import kr.ac.tukorea.ljk.randomunitdefence.TiledMapLoader
 
 class MainScene(gctx: GameContext) : Scene(gctx){
+    init {
+        val map = TiledMapLoader.load(gctx.view.context.assets, "map/stage1.tmj")
+        val layer = map.firstTileLayer()
+        Log.d(
+            javaClass.simpleName,
+            "map=${map.width}x${map.height}, tile=${map.tilewidth}x${map.tileheight}, " +
+                    "layer='${layer.name}', data=${layer.data.size}, firstTile=${layer.tileAt(0, 0)}"
+        )
+    }
+
     enum class Layer{
         BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH
     }
@@ -49,4 +54,5 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         }
         return true
     }
+
 }
