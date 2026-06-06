@@ -32,8 +32,13 @@ class CollisionChecker(private val gctx: GameContext) : IGameObject {
                 val arrow = arrowObject as? Arrow ?: return@forEachReversedAt
 
                 if (arrow.collidesWith(enemy)) {
+                    enemy.decreaseLife(ARCHER_DAMAGE)
                     Log.v(javaClass.simpleName, "Collision !! Enemy( x=${enemy.x}, y=${enemy.y})")
                     scene.world.remove(arrow, MainScene.Layer.ATTACK)
+                    if (enemy.isDead()) {
+
+                        scene.world.remove(enemy, MainScene.Layer.ENEMY)
+                    }
                 }
             }
         }
@@ -41,5 +46,8 @@ class CollisionChecker(private val gctx: GameContext) : IGameObject {
 
     override fun draw(canvas: Canvas) {
         // collisionRect 디버그 표시는 World.draw() 가 전체 IBoxCollidable 객체를 훑으며 맡는다.
+    }
+    companion object {
+        private const val ARCHER_DAMAGE = 10f
     }
 }

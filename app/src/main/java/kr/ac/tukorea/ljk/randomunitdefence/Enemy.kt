@@ -46,6 +46,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         }
     }
    init {
+
         x = 0f
         y = move_y
         width = WIDTH
@@ -83,6 +84,12 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
     override fun onRecycle() {
 
     }
+    fun decreaseLife(amount: Float) {
+        HP -= amount
+    }
+    fun isDead(): Boolean {
+        return HP <= 0f
+    }
 
     companion object{
         fun get(gctx: GameContext): Enemy {
@@ -92,7 +99,6 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
             return enemy.init(type)
         }
         var SPEED = 240f
-
         const val WIDTH = 100f
         const val HEIGHT = 140f
         var move = false

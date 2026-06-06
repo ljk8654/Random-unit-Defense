@@ -31,6 +31,11 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         super.update(gctx)
 
         val target = enemy
+        if (target == null) return
+        if (target.isDead()) {
+            enemy = null
+            return
+        }
 
         if (target != null) {
             if (target.x > x) {
