@@ -2,6 +2,7 @@ package kr.ac.tukorea.ljk.randomunitdefence
 
 import android.graphics.Rect
 import android.graphics.RectF
+import android.util.Log
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -68,6 +69,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         HP = type.health
         maxHP = HP
 
+        Log.d("Enemy", "Spawn imageType=$type HP=$HP")
         return this
     }
     override val collisionRect: RectF
@@ -93,10 +95,8 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
 
     companion object{
         fun get(gctx: GameContext): Enemy {
-            val world = (gctx.scene as MainScene).world
             val type = Type.random()
-            val enemy = world.obtain(Enemy::class.java) ?: Enemy(gctx, type.resId)
-            return enemy.init(type)
+            return Enemy(gctx, type.resId).init(type)
         }
         var SPEED = 240f
         const val WIDTH = 100f
