@@ -1,14 +1,13 @@
 package kr.ac.tukorea.ljk.randomunitdefence
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.RectF
 import android.util.Log
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
-import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ge.spgp2026.a2dg.R
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
-import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
-import kotlin.math.atan2
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer, 10f, 6), IBoxCollidable{
 
@@ -16,54 +15,70 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
     private var enemy: Enemy? = null
 
+    override val collisionRect = RectF()
+
+
+
     init {
-        width = Archer.WIDTH
-        height = Archer.HEIGHT
+        width = WIDTH
+        height = HEIGHT
         setCenter(move_x, move_y)
+
+        updateCollisionRect()
     }
 
     override fun update(gctx: GameContext) {
         super.update(gctx)
-        if (enemy != null) {
-            val hitEnemy = enemy!!
-            if(hitEnemy.x > x){
+
+        val target = enemy
+
+        if (target != null) {
+            if (target.x > x) {
                 rightImage()
-            } else{
+            } else {
                 leftImage()
             }
-            val towerRect = collisionRect
-            val enemyRect = hitEnemy.collisionRect
-            attack(gctx, hitEnemy)
-            if (!RectF.intersects(towerRect, enemyRect)){
-                this.enemy = null
+
+            if (isEnemyInAttackRange(target)) {
+                attack(gctx, target)
+            } else {
+                enemy = null
             }
-
-
         }
 
         updateCollisionRect()
         syncDstRect()
     }
 
-    override val collisionRect = RectF()
+    override fun draw(canvas: Canvas) {
+        canvas.drawCircle(x, y, ATTACK_RADIUS, rangeStrokePaint)
+
+        super.draw(canvas)
+    }
 
     companion object{
+        private val rangeStrokePaint = Paint().apply {
+            color = Color.argb(120, 0, 255, 0)
+            style = Paint.Style.STROKE
+            strokeWidth = 4f
+        }
         const val ATTACK_INTERVAL = 0.5f
-        const val COLLISION_INSET = 200f
+        const val ATTACK_RADIUS = 300f
         const val WIDTH = 90f
         const val HEIGHT = 200f
         var move = false
         var move_x = 600f
         var move_y = 400f
     }
-    fun targetOn(enemy: Enemy){
-        this.enemy = enemy
 
+    fun targetOn(enemy: Enemy) {
+        if (isEnemyInAttackRange(enemy)) {
+            this.enemy = enemy
+        }
     }
-    private fun attack(gctx: GameContext, enemy: Enemy){
-        attackTime -= gctx.frameTime
-        Log.v(javaClass.simpleName, "Collision !! Enemy(level=${this.enemy})")
 
+    private fun attack(gctx: GameContext, enemy: Enemy) {
+        attackTime -= gctx.frameTime
 
         if (attackTime > 0f) return
 
@@ -72,11 +87,33 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         val scene = gctx.scene as? MainScene ?: return
         val power = 200
 
-        val arrow = Arrow.get(gctx, x-60f, y, power, enemy)
+        var arrowX = x
+        if (enemy.x > x) {
+            arrowX = x + 60f
+        } else {
+            arrowX = x - 60f
+        }
+
+        val arrow = Arrow.get(gctx, arrowX, y, power, enemy)
         scene.world.add(arrow, MainScene.Layer.ATTACK)
     }
-    private fun updateCollisionRect(){
-        collisionRect.set(dstRect)
-        collisionRect.inset(-COLLISION_INSET, -COLLISION_INSET)
+
+    private fun isEnemyInAttackRange(enemy: Enemy): Boolean {
+        val dx = enemy.x - x
+        val dy = enemy.y - y
+
+        val distanceSq = dx * dx + dy * dy
+        val radiusSq = ATTACK_RADIUS * ATTACK_RADIUS
+
+        return distanceSq <= radiusSq
+    }
+
+    private fun updateCollisionRect() {
+        collisionRect.set(
+            x - ATTACK_RADIUS,
+            y - ATTACK_RADIUS,
+            x + ATTACK_RADIUS,
+            y + ATTACK_RADIUS
+        )
     }
 }
