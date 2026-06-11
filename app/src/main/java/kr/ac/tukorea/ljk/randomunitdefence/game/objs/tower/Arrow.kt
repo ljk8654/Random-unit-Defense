@@ -1,16 +1,16 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower
 
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ge.spgp2026.a2dg.R
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
-import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import android.graphics.RectF
+import kr.ac.tukorea.ljk.randomunitdefence.R
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
+import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 import kotlin.math.sqrt
 
-class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.arrow), IBoxCollidable, IRecyclable {
+class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, IRecyclable {
     override var x = 600f
     override var y = 300f
     var power = 0f

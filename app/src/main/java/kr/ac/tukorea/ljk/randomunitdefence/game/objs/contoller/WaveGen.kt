@@ -1,11 +1,11 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller
 
 import android.graphics.Canvas
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ljk.randomunitdefence.Enemy
-import kr.ac.tukorea.ljk.randomunitdefence.MainScene
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
+import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 import kotlin.random.Random
 
 class WaveGen(
@@ -26,8 +26,8 @@ class WaveGen(
     }
 
     private fun spawn() {
-        val y = Random.nextFloat() * gctx.metrics.height
-        val enemy = Enemy.get(gctx)
+        val y = Random.Default.nextFloat() * gctx.metrics.height
+        val enemy = Enemy.Companion.get(gctx)
         enemy.setCenter(0f, y)
         world.add(enemy, MainScene.Layer.ENEMY)
     }

@@ -1,4 +1,4 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.map
 
 import android.content.res.AssetManager
 import kotlinx.serialization.Serializable

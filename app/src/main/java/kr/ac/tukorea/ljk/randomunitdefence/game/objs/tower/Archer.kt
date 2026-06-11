@@ -1,14 +1,15 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.util.Log
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kotlin.random.Random
+import kr.ac.tukorea.ljk.randomunitdefence.R
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
+import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 
 class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSprite(gctx, type.resId, 0f, 6), IBoxCollidable{
 
@@ -20,7 +21,7 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         val level: Int,
     ) {
         NORMAL(
-            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer,
+            R.mipmap.archer,
             0.5f,
             300f,
             10f,
@@ -28,21 +29,21 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         ),
 
         RARE(
-            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.rare,
+            R.mipmap.rare,
             0.4f,
             330f,
             15f,
              2,
         ),
         UNIQUE(
-            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.unique,
+            R.mipmap.unique,
             0.3f,
             400f,
             20f,
             2,
         ),
         LEGEND(
-            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.legend,
+            R.mipmap.legend,
             0.3f,
             500f,
             30f,

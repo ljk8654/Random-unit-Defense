@@ -1,4 +1,4 @@
-package kr.ac.tukorea.ljk.randomunitdefence.objs.bg
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,10 +7,10 @@ import android.graphics.Rect
 import android.graphics.RectF
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ljk.randomunitdefence.TiledLayer
-import kr.ac.tukorea.ljk.randomunitdefence.TiledMap
-import kr.ac.tukorea.ljk.randomunitdefence.TiledMapLoader
-import kr.ac.tukorea.ljk.randomunitdefence.TiledTileset
+import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledLayer
+import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMap
+import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
+import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledTileset
 
 // TiledBackground 는 Tiled 가 만든 .tmj map 과 tileset image 를 읽어 배경 tile 을 그린다.
 // 아직 a2dg 공통 class 로 올리지 않고 app/game.objs.bg 에 두는 이유는,

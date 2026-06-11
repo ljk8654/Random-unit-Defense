@@ -1,38 +1,36 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy
 
-import androidx.core.graphics.withRotation
-import android.graphics.Rect
+import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.Log
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
-import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ge.spgp2026.a2dg.R
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.SheetSprite
-import android.view.MotionEvent
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
-import kotlin.random.Random
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.withRotation
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import kr.ac.tukorea.ge.spgp2026.a2dg.util.Gauge
-import android.graphics.Canvas
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
+import kr.ac.tukorea.ljk.randomunitdefence.R
+import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
+import kotlin.random.Random
 
-class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx, resId, 10f, 4), IRecyclable,IBoxCollidable{
+class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx, resId, 10f, 4),
+    IRecyclable, IBoxCollidable {
     enum class Type(
         val health: Float,
         val spawnRate: Int,
         val resId: Int
     ) {
-        RED(50f, 10, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.red),
-        BLUE(30f, 20, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.blue),
-        GREEN(20f, 30, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.green),
-        BAT(10f, 40, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.bat);
+        RED(50f, 10, R.mipmap.red),
+        BLUE(30f, 20, R.mipmap.blue),
+        GREEN(20f, 30, R.mipmap.green),
+        BAT(10f, 40, R.mipmap.bat);
 
         companion object {
             private val totalSpawnRate = entries.sumOf { it.spawnRate }
 
             fun random(): Type {
-                var selectedRate = Random.nextInt(totalSpawnRate)
+                var selectedRate = Random.Default.nextInt(totalSpawnRate)
 
                 // Type 이 자기 spawnRate 규칙을 직접 가진다.
                 // spawnRate 를 차례로 빼다가 음수가 되는 지점이 선택된 type 이다.
@@ -147,10 +145,10 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         var move_x = 600f
         var move_y = 600f
         private val rectsArray = listOf(
-            listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.red),
-            listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.blue),
-            listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.green),
-            listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.bat),
+            listOf(R.mipmap.red),
+            listOf(R.mipmap.blue),
+            listOf(R.mipmap.green),
+            listOf(R.mipmap.bat),
         )
         private const val LIFE_GAUGE_THICKNESS = 0.2f
         private const val LIFE_GAUGE_WIDTH_RATIO = 2f / 3f

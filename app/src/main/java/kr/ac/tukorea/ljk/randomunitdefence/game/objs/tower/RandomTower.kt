@@ -1,15 +1,12 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower
 
 import android.graphics.RectF
-import android.util.Log
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ge.spgp2026.a2dg.R
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite
-import android.view.MotionEvent
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
+import kr.ac.tukorea.ljk.randomunitdefence.R
 
-class RandomTower (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.random), IBoxCollidable{
+class RandomTower (gctx: GameContext): Sprite(gctx, R.mipmap.random), IBoxCollidable {
 
     init {
         width = RandomTower.WIDTH

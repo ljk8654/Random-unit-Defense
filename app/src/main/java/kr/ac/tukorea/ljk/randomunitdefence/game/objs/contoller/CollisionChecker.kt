@@ -1,13 +1,16 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller
 
 import android.graphics.Canvas
 import android.util.Log
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
-import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ljk.randomunitdefence.Explosion
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
-
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.effect.Explosion
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Archer
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Arrow
+import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 
 class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : IGameObject {
     override fun update(gctx: GameContext) {
@@ -55,7 +58,7 @@ class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : I
     }
 
     private fun explode(gctx: GameContext, arrow: Arrow, enemyHit: Enemy, enemies: List<IGameObject>) {
-        val explosion = Explosion.get(gctx, enemyHit.x, enemyHit.y, arrow.explosionRadius)
+        val explosion = Explosion.Companion.get(gctx, enemyHit.x, enemyHit.y, arrow.explosionRadius)
         world.add(explosion, MainScene.Layer.EXPLOSION)
 
         val explosionRadiusSq = arrow.explosionRadius * arrow.explosionRadius

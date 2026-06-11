@@ -1,14 +1,18 @@
-package kr.ac.tukorea.ljk.randomunitdefence
+package kr.ac.tukorea.ljk.randomunitdefence.game.scene.main
 
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground
-import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
-import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
-import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
-import android.view.MotionEvent
 import android.util.Log
-import kr.ac.tukorea.ljk.randomunitdefence.Enemy.Type
-import kr.ac.tukorea.ljk.randomunitdefence.TiledMapLoader
-import kr.ac.tukorea.ljk.randomunitdefence.objs.bg.TiledBackground
+import android.view.MotionEvent
+import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
+import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Archer
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Arrow
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.CollisionChecker
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.RandomTower
+import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg.TiledBackground
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.WaveGen
+
 class MainScene(gctx: GameContext) : Scene(gctx){
     init {
         val map = TiledMapLoader.load(gctx.view.context.assets, "map/stage1.tmj")
@@ -36,13 +40,13 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         add(Archer(gctx, type = Archer.Type.RARE), Layer.TOWER)
         add(Arrow(gctx), Layer.ATTACK)
         add(RandomTower(gctx), Layer.TOUCH)
-        add(WaveGen(gctx,this),Layer.CONTROLLER)
+        add(WaveGen(gctx, this),Layer.CONTROLLER)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val pt = gctx.metrics.fromScreen(event.x,event.y)
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (pt.x in RandomTower.move_x- RandomTower.WIDTH/2 .. RandomTower.move_x + RandomTower.WIDTH/2 && pt.y in RandomTower.move_y - RandomTower.HEIGHT/2 .. RandomTower.move_y + RandomTower.HEIGHT/2){
+            if (pt.x in RandomTower.Companion.move_x- RandomTower.Companion.WIDTH/2 .. RandomTower.Companion.move_x + RandomTower.Companion.WIDTH/2 && pt.y in RandomTower.Companion.move_y - RandomTower.Companion.HEIGHT/2 .. RandomTower.Companion.move_y + RandomTower.Companion.HEIGHT/2){
                 val newArcher = Archer(gctx, type = Archer.Type.RARE)
                 draggingArcher = newArcher
                 draggingArcher?.isDrag = true
