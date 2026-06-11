@@ -34,8 +34,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
             Layer.BG,
         )
         add(collisionChecker, Layer.CONTROLLER)
-        add(originalArcher, Layer.TOWER)
-        add(RareArcher(gctx), Layer.TOWER)
+        add(Archer(gctx, type = Archer.Type.RARE), Layer.TOWER)
         add(Arrow(gctx), Layer.ATTACK)
         add(RandomTower(gctx), Layer.TOUCH)
         add(WaveGen(gctx,this),Layer.CONTROLLER)

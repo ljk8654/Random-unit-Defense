@@ -10,15 +10,34 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kotlin.random.Random
 
-class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer, 0f, 6), IBoxCollidable{
+class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSprite(gctx, type.resId, 0f, 6), IBoxCollidable{
 
-    private var attackTime = ATTACK_INTERVAL
+    enum class Type(
+        val resId: Int,
+        val attackInterval: Float,
+        val attackRadius: Float,
+        val power: Int,
+    ) {
+        NORMAL(
+            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer,
+            0.5f,
+            300f,
+            200,
+        ),
+
+        RARE(
+            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.rare,
+            0.4f,
+            330f,
+            260,
+        ),
+    }
+
+    private var attackTime = type.attackInterval
 
     private var enemy: Enemy? = null
 
     override val collisionRect = RectF()
-
-
 
     init {
         width = WIDTH
@@ -59,7 +78,7 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
     }
 
     override fun draw(canvas: Canvas) {
-        canvas.drawCircle(x, y, ATTACK_RADIUS, rangeStrokePaint)
+        canvas.drawCircle(x, y, type.attackRadius, rangeStrokePaint)
 
         super.draw(canvas)
     }
@@ -70,8 +89,6 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
             style = Paint.Style.STROKE
             strokeWidth = 4f
         }
-        const val ATTACK_INTERVAL = 0.5f
-        const val ATTACK_RADIUS = 300f
         const val WIDTH = 90f
         const val HEIGHT = 200f
         var move = false
@@ -81,7 +98,7 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
     fun targetOn(enemy: Enemy) {
         if (isEnemyInAttackRange(enemy)) {
-            fps = 5f / ATTACK_INTERVAL
+            fps = 5f / type.attackInterval
             this.enemy = enemy
         }
     }
@@ -91,7 +108,7 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
 
         if (attackTime > 0f) return
 
-        attackTime = ATTACK_INTERVAL
+        attackTime = type.attackInterval
 
         val scene = gctx.scene as? MainScene ?: return
         val power = 200
@@ -112,17 +129,17 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         val dy = enemy.y - y
 
         val distanceSq = dx * dx + dy * dy
-        val radiusSq = ATTACK_RADIUS * ATTACK_RADIUS
+        val radiusSq = type.attackRadius * type.attackRadius
 
         return distanceSq <= radiusSq
     }
 
     private fun updateCollisionRect() {
         collisionRect.set(
-            x - ATTACK_RADIUS,
-            y - ATTACK_RADIUS,
-            x + ATTACK_RADIUS,
-            y + ATTACK_RADIUS
+            x - type.attackRadius,
+            y - type.attackRadius,
+            x + type.attackRadius,
+            y + type.attackRadius
         )
     }
 }
