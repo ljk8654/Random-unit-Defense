@@ -13,7 +13,8 @@ import kotlin.math.sqrt
 class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.arrow), IBoxCollidable, IRecyclable {
     override var x = 600f
     override var y = 300f
-    var power = 0
+    var power = 0f
+        private set
     private lateinit var target: Enemy
 
     init {
@@ -22,7 +23,7 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
         setCenter(x, y)
     }
 
-    fun init(startX: Float, startY: Float, power: Int, target: Enemy): Arrow{
+    fun init(startX: Float, startY: Float,power: Float, target: Enemy): Arrow{
         x = startX
         y = startY
         this.power = power
@@ -43,7 +44,7 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
         val dx = target.x - x
         val dy = target.y - y
         val distance = sqrt(dx * dx + dy * dy)
-        val t = POWER / distance
+        val t = power / distance
 
         x =  x + dx * t
         y =  y + dy * t
@@ -60,10 +61,10 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
     companion object{
         const val WIDTH = 60f
         const val HEIGHT = 30f
-        const val POWER = 20f
+        const val BASE_POWER = 20f
         var move = false
 
-        fun get(gctx: GameContext, x: Float, y: Float, power:Int, target: Enemy): Arrow {
+        fun get(gctx: GameContext, x: Float, y: Float, power:Float, target: Enemy): Arrow {
             val scene = gctx.scene as? MainScene ?: return Arrow(gctx).init(x,y,power, target)
             val arrow = scene.world.obtain(Arrow::class.java) ?: Arrow(gctx)
             return arrow.init(x,y,power, target)

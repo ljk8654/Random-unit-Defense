@@ -16,41 +16,46 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         val resId: Int,
         val attackInterval: Float,
         val attackRadius: Float,
-        val power: Int,
+        val power: Float,
     ) {
         NORMAL(
             kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer,
             0.5f,
             300f,
-            200,
+            10f,
         ),
 
         RARE(
             kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.rare,
             0.4f,
             330f,
-            260,
+            15f,
         ),
     }
 
     private var attackTime = type.attackInterval
+    var isDrag = false
 
     private var enemy: Enemy? = null
 
     override val collisionRect = RectF()
 
+    var move_x = 600f
+    var move_y = 400f
+
     init {
         width = WIDTH
         height = HEIGHT
         setCenter(move_x, move_y)
-
         updateCollisionRect()
+        syncDstRect()
     }
 
     override fun update(gctx: GameContext) {
         super.update(gctx)
 
         val target = enemy
+        if (isDrag) return
         if (target == null) return
         if (target.isDead()) {
             enemy = null
@@ -79,7 +84,8 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
 
     override fun draw(canvas: Canvas) {
         canvas.drawCircle(x, y, type.attackRadius, rangeStrokePaint)
-
+        updateCollisionRect()
+        syncDstRect()
         super.draw(canvas)
     }
 
@@ -91,12 +97,10 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         }
         const val WIDTH = 90f
         const val HEIGHT = 200f
-        var move = false
-        var move_x = 600f
-        var move_y = 400f
     }
 
     fun targetOn(enemy: Enemy) {
+        if (isDrag) return
         if (isEnemyInAttackRange(enemy)) {
             fps = 5f / type.attackInterval
             this.enemy = enemy
@@ -111,7 +115,7 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         attackTime = type.attackInterval
 
         val scene = gctx.scene as? MainScene ?: return
-        val power = 200
+        val arrowPower = type.power
 
         var arrowX = x
         if (enemy.x > x) {
@@ -120,7 +124,7 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
             arrowX = x - 60f
         }
 
-        val arrow = Arrow.get(gctx, arrowX, y, power, enemy)
+        val arrow = Arrow.get(gctx, arrowX, y, arrowPower,enemy)
         scene.world.add(arrow, MainScene.Layer.ATTACK)
     }
 

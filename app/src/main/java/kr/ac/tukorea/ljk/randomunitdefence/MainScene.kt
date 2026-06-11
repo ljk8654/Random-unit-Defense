@@ -44,18 +44,22 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         val pt = gctx.metrics.fromScreen(event.x,event.y)
         if (event.action == MotionEvent.ACTION_DOWN) {
             if (pt.x in RandomTower.move_x- RandomTower.WIDTH/2 .. RandomTower.move_x + RandomTower.WIDTH/2 && pt.y in RandomTower.move_y - RandomTower.HEIGHT/2 .. RandomTower.move_y + RandomTower.HEIGHT/2){
-                val newArcher = Archer(gctx)
+                val newArcher = Archer(gctx, type = Archer.Type.RARE)
                 draggingArcher = newArcher
+                draggingArcher?.isDrag = true
                 draggingArcher?.touch = true
 
                 world.add(newArcher, Layer.TOWER)
             }
         }
         if (event.action == MotionEvent.ACTION_MOVE && draggingArcher?.touch == true){
+            draggingArcher?.move_x = pt.x
+            draggingArcher?.move_y = pt.y
             draggingArcher?.x = pt.x
             draggingArcher?.y = pt.y
         }
         if (event.action == MotionEvent.ACTION_UP){
+            draggingArcher?.isDrag = false
             draggingArcher?.touch = false
         }
         return true
