@@ -11,8 +11,8 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import kr.ac.tukorea.ge.spgp2026.a2dg.util.Gauge
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ljk.randomunitdefence.R
-import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.mainWorld
 import kotlin.random.Random
 
 class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx, resId, 10f, 4),
@@ -85,7 +85,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         x += SPEED * gctx.frameTime
         setCenter(x, y)
         if (x - width / 2f > gctx.metrics.width) {
-            (gctx.scene as MainScene).world.remove(this, MainLayer.ENEMY)
+            gctx.mainWorld().remove(this, MainLayer.ENEMY)
         }
     }
 

@@ -1,5 +1,6 @@
 package kr.ac.tukorea.ljk.randomunitdefence.game.scene.main
 
+import android.graphics.PointF
 import android.util.Log
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
@@ -13,6 +14,7 @@ import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg.TiledBackground
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.WaveGen
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
+import android.graphics.RectF
 
 
 class MainScene(gctx: GameContext) : Scene(gctx){
@@ -27,13 +29,24 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     }
 
 
-
+    private val tiledMap = TiledMapLoader.load(gctx.view.context.assets, MAP_ASSET_PATH)
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     private var testFliesAdded = false
+    private val touchPoint0 = PointF()
+    private val touchPoint1 = PointF()
+    private val mapPoint = PointF()
+    private val archerInstallRect = RectF()
+    private val existingArcherRect = RectF()
     override var world = World(MainLayer.entries.toTypedArray()).apply{
         add(
-            TiledBackground(gctx, "map/stage1.tmj", tileWidth = 50f, tileHeight = 50f),
+            TiledBackground(
+                gctx,
+                MAP_ASSET_PATH,
+            tiledMap,
+            tileWidth = TILE_WIDTH,
+            tileHeight = TILE_HEIGHT,
+        ),
             MainLayer.BG,
         )
         add(CollisionChecker(gctx, this), MainLayer.CONTROLLER)
@@ -62,10 +75,55 @@ class MainScene(gctx: GameContext) : Scene(gctx){
             draggingArcher?.y = pt.y
         }
         if (event.action == MotionEvent.ACTION_UP){
+            val archer = draggingArcher ?: return true
             draggingArcher?.isDrag = false
             draggingArcher?.touch = false
+            if (hasOverlappingArcher(pt.x, pt.y, archer)) {
+                world.remove(draggingArcher!!, MainLayer.TOWER)
+            }
         }
         return true
     }
 
+    private fun tileCenterX(mapX: Float): Float {
+        return (mapX / TILE_WIDTH).toInt() * TILE_WIDTH + TILE_WIDTH / 2f
+    }
+
+    private fun tileCenterY(mapY: Float): Float {
+        return (mapY / TILE_HEIGHT).toInt() * TILE_HEIGHT + TILE_HEIGHT / 2f
+    }
+
+    private fun hasOverlappingArcher(x: Float, y: Float, self: Archer): Boolean {
+        archerInstallRect.set(
+            x - ARCHER_INSTALL_SIZE / 2f,
+            y - ARCHER_INSTALL_SIZE / 2f,
+            x + ARCHER_INSTALL_SIZE / 2f,
+            y + ARCHER_INSTALL_SIZE / 2f,
+        )
+        val archers = world.objectsAt(MainLayer.TOWER)
+        var index = 0
+        while (index < archers.size) {
+            val archer = archers[index] as? Archer
+            if (archer != null && archer !== self) {
+                existingArcherRect.set(
+                    archer.x - ARCHER_INSTALL_SIZE / 2f,
+                    archer.y - ARCHER_INSTALL_SIZE / 2f,
+                    archer.x + ARCHER_INSTALL_SIZE / 2f,
+                    archer.y + ARCHER_INSTALL_SIZE / 2f,
+                )
+                if (RectF.intersects(archerInstallRect, existingArcherRect)) {
+                    return true
+                }
+            }
+            index++
+        }
+        return false
+    }
+
+    companion object {
+        private const val MAP_ASSET_PATH = "map/stage1.tmj"
+        private const val TILE_WIDTH = 50f
+        private const val TILE_HEIGHT = 50f
+        private const val ARCHER_INSTALL_SIZE = 50f
+    }
 }

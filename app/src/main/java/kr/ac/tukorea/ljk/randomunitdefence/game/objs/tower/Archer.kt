@@ -9,8 +9,8 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ljk.randomunitdefence.R
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
-import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.mainWorld
 
 class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSprite(gctx, type.resId, 0f, 6), IBoxCollidable{
 
@@ -133,7 +133,6 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
 
         attackTime = type.attackInterval
 
-        val scene = gctx.scene as? MainScene ?: return
         val arrowPower = type.power
 
         var arrowX = x
@@ -144,7 +143,7 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         }
 
         val arrow = Arrow.get(gctx, arrowX, y, arrowPower,enemy)
-        scene.world.add(arrow, MainLayer.ATTACK)
+        gctx.mainWorld().add(arrow, MainLayer.ATTACK)
     }
 
     private fun isEnemyInAttackRange(enemy: Enemy): Boolean {

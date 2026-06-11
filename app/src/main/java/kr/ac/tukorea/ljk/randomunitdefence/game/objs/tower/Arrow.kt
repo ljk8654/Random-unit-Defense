@@ -7,8 +7,8 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import android.graphics.RectF
 import kr.ac.tukorea.ljk.randomunitdefence.R
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
-import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.mainWorld
 import kotlin.math.sqrt
 
 class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, IRecyclable {
@@ -56,8 +56,7 @@ class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, I
 
         syncDstRect()
         if (x + height / 2f < 0f){
-            val scene = gctx.scene as? MainScene ?: return
-            scene.world.remove(this, MainLayer.ATTACK)
+            gctx.mainWorld().remove(this, MainLayer.ATTACK)
         }
     }
     fun updateBox(target: Enemy){
@@ -70,8 +69,7 @@ class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, I
         var move = false
 
         fun get(gctx: GameContext, x: Float, y: Float, power:Float, target: Enemy): Arrow {
-            val scene = gctx.scene as? MainScene ?: return Arrow(gctx).init(x,y,power, target)
-            val arrow = scene.world.obtain(Arrow::class.java) ?: Arrow(gctx)
+            val arrow =gctx.mainWorld().obtain(Arrow::class.java) ?: Arrow(gctx)
             return arrow.init(x,y,power, target)
         }
         private const val SPLASH_MIN_POWER = 30f

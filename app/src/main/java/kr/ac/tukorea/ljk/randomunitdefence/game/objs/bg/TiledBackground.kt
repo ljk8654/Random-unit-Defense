@@ -9,7 +9,6 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledLayer
 import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMap
-import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledTileset
 
 // TiledBackground 는 Tiled 가 만든 .tmj map 과 tileset image 를 읽어 배경 tile 을 그린다.
@@ -25,16 +24,13 @@ class TiledBackground(
 
     // assets/ 아래의 TMJ 파일 경로이다. 예: "map/desert.tmj"
     mapAssetPath: String,
-
+    private val map: TiledMap,
     // 게임 좌표계에서 tile 하나를 몇 x 몇 크기로 그릴지 나타낸다.
     // TMJ 원본 tile 크기(tilewidth/tileheight)와 화면에 그릴 크기는 다를 수 있다.
     private var tileWidth: Float,
     private var tileHeight: Float,
-) : IGameObject {
-    // TMJ 파일을 읽어 Kotlin data class 로 변환한다.
-    // 이 객체에는 map 크기, layer data, tileset image 이름 같은 정보가 들어 있다.
-    private val map: TiledMap = TiledMapLoader.load(gctx.view.context.assets, mapAssetPath)
 
+) : IGameObject {
     // TMJ 안의 image 경로는 보통 TMJ 파일 위치를 기준으로 상대 경로로 저장된다.
     // "map/desert.tmj" 에서 directory 를 구해 두면 "map/" + "tmw_desert_spacing.png" 로 image 를 찾을 수 있다.
     private val assetDirectory = directoryOf(mapAssetPath)
