@@ -6,6 +6,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import android.view.MotionEvent
 import android.util.Log
+import kr.ac.tukorea.ljk.randomunitdefence.Enemy.Type
 import kr.ac.tukorea.ljk.randomunitdefence.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.objs.bg.TiledBackground
 class MainScene(gctx: GameContext) : Scene(gctx){
@@ -34,6 +35,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         )
         add(collisionChecker, Layer.CONTROLLER)
         add(originalArcher, Layer.TOWER)
+        add(RareArcher(gctx), Layer.TOWER)
         add(Arrow(gctx), Layer.ATTACK)
         add(RandomTower(gctx), Layer.TOUCH)
         add(WaveGen(gctx,this),Layer.CONTROLLER)
@@ -46,6 +48,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
                 val newArcher = Archer(gctx)
                 draggingArcher = newArcher
                 draggingArcher?.touch = true
+
                 world.add(newArcher, Layer.TOWER)
             }
         }

@@ -10,7 +10,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kotlin.random.Random
 
-class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer, 0f, 6), IBoxCollidable{
+class RareArcher (gctx: GameContext): AnimSprite(gctx, R.mipmap.rare, 0f, 6), IBoxCollidable{
 
     private var attackTime = ATTACK_INTERVAL
 
@@ -75,13 +75,13 @@ class Archer (gctx: GameContext): AnimSprite(gctx, kr.ac.tukorea.ljk.randomunitd
         const val WIDTH = 90f
         const val HEIGHT = 200f
         var move = false
-        var move_x = 600f
+        var move_x = 900f
         var move_y = 400f
     }
 
     fun targetOn(enemy: Enemy) {
         if (isEnemyInAttackRange(enemy)) {
-            fps = 5f / ATTACK_INTERVAL
+            fps = 5f / Archer.ATTACK_INTERVAL
             this.enemy = enemy
         }
     }
