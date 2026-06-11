@@ -46,6 +46,8 @@ class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, I
 
     override fun update(gctx: GameContext) {
         if (!::target.isInitialized) return
+        if (target.isDead()) gctx.mainWorld().remove(this, MainLayer.ATTACK)
+
         val dx = target.x - x
         val dy = target.y - y
         val distance = sqrt(dx * dx + dy * dy)
