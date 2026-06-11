@@ -1,5 +1,6 @@
 package kr.ac.tukorea.ljk.randomunitdefence
 
+import androidx.core.graphics.withRotation
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Log
@@ -12,6 +13,9 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.SheetSprite
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IRecyclable
 import kotlin.random.Random
+import androidx.core.graphics.toColorInt
+import kr.ac.tukorea.ge.spgp2026.a2dg.util.Gauge
+import android.graphics.Canvas
 
 class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx, resId, 10f, 4), IRecyclable,IBoxCollidable{
     enum class Type(
@@ -58,6 +62,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         private set
     var HP = 0f
         private set
+    private var angle = 0f
     private fun init(type: Type): Enemy {
         x = 0f
         y = move_y
@@ -86,9 +91,34 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
     override fun onRecycle() {
 
     }
+    override fun draw(canvas: Canvas) {
+        // withRotation 은 아래 save/rotate/restore 패턴을 보기 좋게 감싼 AndroidX KTX helper 이다.
+        // canvas.save()
+        // canvas.rotate(angle, x, y)
+        // super.draw(canvas)
+        // canvas.restore()
+            canvas.withRotation(angle, x, y) {
+            super.draw(canvas)
+        }
+
+        // Gauge 는 색/두께만 가진 stateless drawing helper 이다.
+        // Fly 마다 Gauge 를 만들면 적이 생성될 때마다 Paint 객체도 같이 생기므로,
+        // companion object 의 lifeGauge 하나를 모든 Fly 가 공유하고 progress 만 넘긴다.
+        val barSize = width * LIFE_GAUGE_WIDTH_RATIO
+
+
+        lifeGauge.draw(
+            canvas,
+            x - barSize / 2f,
+            y + barSize / 2f,
+            barSize,
+            HP / maxHP,
+        )
+    }
     fun decreaseLife(amount: Float) {
         HP -= amount
     }
+
     fun isDead(): Boolean {
         return HP <= 0f
     }
@@ -110,8 +140,13 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
             listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.green),
             listOf(kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.bat),
         )
+        private const val LIFE_GAUGE_THICKNESS = 0.2f
+        private const val LIFE_GAUGE_WIDTH_RATIO = 2f / 3f
+        private val lifeGauge = Gauge(
+            thickness = LIFE_GAUGE_THICKNESS,
+            fgColor = "#C9786400".toColorInt(),
+            bgColor = "#B5FFD7D5".toColorInt(),
+        )
     }
-
-
 
 }
