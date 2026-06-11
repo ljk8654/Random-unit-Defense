@@ -15,6 +15,10 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
     override var y = 300f
     var power = 0f
         private set
+    val splashes: Boolean
+        get() = power >= SPLASH_MIN_POWER
+    val explosionRadius: Float
+        get() = BASE_EXPLOSION_RADIUS + EXPLOSION_RADIUS_POWER_RATIO * power
     private lateinit var target: Enemy
 
     init {
@@ -69,6 +73,9 @@ class Arrow (gctx: GameContext): Sprite(gctx, kr.ac.tukorea.ljk.randomunitdefenc
             val arrow = scene.world.obtain(Arrow::class.java) ?: Arrow(gctx)
             return arrow.init(x,y,power, target)
         }
+        private const val SPLASH_MIN_POWER = 30f
+        private const val BASE_EXPLOSION_RADIUS = 60f
+        private const val EXPLOSION_RADIUS_POWER_RATIO = 3f
 
     }
 

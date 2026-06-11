@@ -17,12 +17,14 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         val attackInterval: Float,
         val attackRadius: Float,
         val power: Float,
+        val level: Int,
     ) {
         NORMAL(
             kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.archer,
             0.5f,
             300f,
             10f,
+            1,
         ),
 
         RARE(
@@ -30,6 +32,21 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
             0.4f,
             330f,
             15f,
+             2,
+        ),
+        UNIQUE(
+            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.unique,
+            0.3f,
+            400f,
+            20f,
+            2,
+        ),
+        LEGEND(
+            kr.ac.tukorea.ljk.randomunitdefence.R.mipmap.legend,
+            0.3f,
+            500f,
+            30f,
+            2,
         ),
     }
 

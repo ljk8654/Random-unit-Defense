@@ -21,10 +21,9 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     }
 
     enum class Layer{
-        BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH
+        BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH, EXPLOSION,
     }
-    private val collisionChecker = CollisionChecker(gctx)
-    private val originalArcher = Archer(gctx)
+
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     private var testFliesAdded = false
@@ -33,7 +32,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
             TiledBackground(gctx, "map/stage1.tmj", tileWidth = 50f, tileHeight = 50f),
             Layer.BG,
         )
-        add(collisionChecker, Layer.CONTROLLER)
+        add(CollisionChecker(gctx, this), Layer.CONTROLLER)
         add(Archer(gctx, type = Archer.Type.RARE), Layer.TOWER)
         add(Arrow(gctx), Layer.ATTACK)
         add(RandomTower(gctx), Layer.TOUCH)

@@ -58,6 +58,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         height = HEIGHT
         setCenter(x, y)
     }
+    private var displayHP= 0f
     var maxHP = 0f
         private set
     var HP = 0f
@@ -73,7 +74,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
 
         HP = type.health
         maxHP = HP
-
+        displayHP = HP
         Log.d("Enemy", "Spawn imageType=$type HP=$HP")
         return this
     }
@@ -81,6 +82,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         get() = dstRect
 
     override fun update(gctx: GameContext) {
+        updateDisplayHP()
         x += SPEED * gctx.frameTime
         setCenter(x, y)
         if (x - width / 2f > gctx.metrics.width) {
@@ -112,7 +114,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
             x - barSize / 2f,
             y + barSize / 2f,
             barSize,
-            HP / maxHP,
+            displayHP / maxHP,
         )
     }
     fun decreaseLife(amount: Float) {
@@ -122,7 +124,17 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
     fun isDead(): Boolean {
         return HP <= 0f
     }
+    private fun updateDisplayHP() {
+        if (HP == displayHP) return
 
+        val step = maxHP / HP_GAUGE_ANIMATION_STEP_COUNT
+        val diff = HP - displayHP
+        displayHP += when {
+            diff < -step -> -step
+            diff > step -> step
+            else -> diff
+        }
+    }
     companion object{
         fun get(gctx: GameContext): Enemy {
             val type = Type.random()
@@ -142,6 +154,7 @@ class Enemy private constructor(gctx: GameContext, resId: Int): AnimSprite(gctx,
         )
         private const val LIFE_GAUGE_THICKNESS = 0.2f
         private const val LIFE_GAUGE_WIDTH_RATIO = 2f / 3f
+        private const val HP_GAUGE_ANIMATION_STEP_COUNT = 25f
         private val lifeGauge = Gauge(
             thickness = LIFE_GAUGE_THICKNESS,
             fgColor = "#C9786400".toColorInt(),
