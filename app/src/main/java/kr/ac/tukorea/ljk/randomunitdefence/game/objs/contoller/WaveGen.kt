@@ -5,12 +5,12 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
-import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
 import kotlin.random.Random
 
 class WaveGen(
     private val gctx: GameContext,
-    private val world: World<MainScene.Layer>,
+    private val world: World<MainLayer>,
 ) : IGameObject {
     private var elapsedTime = 0f
 
@@ -29,7 +29,7 @@ class WaveGen(
         val y = Random.Default.nextFloat() * gctx.metrics.height
         val enemy = Enemy.Companion.get(gctx)
         enemy.setCenter(0f, y)
-        world.add(enemy, MainScene.Layer.ENEMY)
+        world.add(enemy, MainLayer.ENEMY)
     }
 
 

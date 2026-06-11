@@ -10,12 +10,12 @@ import kr.ac.tukorea.ljk.randomunitdefence.game.objs.effect.Explosion
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Archer
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.Arrow
-import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
 
-class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : IGameObject {
+class CollisionChecker(gctx: GameContext, val world: World<MainLayer>) : IGameObject {
     override fun update(gctx: GameContext) {
-        val arrows = world.objectsAt(MainScene.Layer.ATTACK)
-        val enemies = world.objectsAt(MainScene.Layer.ENEMY)
+        val arrows = world.objectsAt(MainLayer.ATTACK)
+        val enemies = world.objectsAt(MainLayer.ENEMY)
 
         // 바깥쪽 Enemy 와 안쪽 Bullet 을 모두 forEachReversedAt() 로 뒤에서 앞으로 돈다.
         // 그러면 충돌한 Bullet 이나 Enemy 를 즉시 remove() 해도
@@ -23,10 +23,10 @@ class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : I
         // 그리고 forEachReversedAt() 는 지금 inline 함수이므로,
         // helper 호출 형태로 써도 별도 함수/람다 객체가 추가로 생기지 않고
         // 호출 위치에 그대로 펴진다고 생각하면 된다.
-        world.forEachReversedAt(MainScene.Layer.ENEMY) { enemyObject ->
+        world.forEachReversedAt(MainLayer.ENEMY) { enemyObject ->
             val enemy = enemyObject as? Enemy ?: return@forEachReversedAt
 
-            world.forEachReversedAt(MainScene.Layer.TOWER) { towerObject ->
+            world.forEachReversedAt(MainLayer.TOWER) { towerObject ->
                 val archer = towerObject as? Archer ?: return@forEachReversedAt
 
                 if (archer.collidesWith(enemy)) {
@@ -35,7 +35,7 @@ class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : I
                 }
             }
 
-            world.forEachReversedAt(MainScene.Layer.ATTACK) { arrowObject ->
+            world.forEachReversedAt(MainLayer.ATTACK) { arrowObject ->
                 val arrow = arrowObject as? Arrow ?: return@forEachReversedAt
 
                 if (arrow.collidesWith(enemy)) {
@@ -44,7 +44,7 @@ class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : I
                     if (arrow.splashes) {
                         explode(gctx, arrow, enemy, enemies)
                     }
-                    world.remove(arrow, MainScene.Layer.ATTACK)
+                    world.remove(arrow, MainLayer.ATTACK)
 
                 }
             }
@@ -53,13 +53,13 @@ class CollisionChecker(gctx: GameContext, val world: World<MainScene.Layer>) : I
     private fun hit(enemy: Enemy, damage: Float) {
         enemy.decreaseLife(damage)
         if (enemy.isDead()) {
-            world.remove(enemy, MainScene.Layer.ENEMY)
+            world.remove(enemy, MainLayer.ENEMY)
         }
     }
 
     private fun explode(gctx: GameContext, arrow: Arrow, enemyHit: Enemy, enemies: List<IGameObject>) {
         val explosion = Explosion.Companion.get(gctx, enemyHit.x, enemyHit.y, arrow.explosionRadius)
-        world.add(explosion, MainScene.Layer.EXPLOSION)
+        world.add(explosion, MainLayer.EXPLOSION)
 
         val explosionRadiusSq = arrow.explosionRadius * arrow.explosionRadius
         for (ei in enemies.lastIndex downTo 0) {

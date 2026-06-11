@@ -8,6 +8,7 @@ import android.graphics.RectF
 import kr.ac.tukorea.ljk.randomunitdefence.R
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
 import kr.ac.tukorea.ljk.randomunitdefence.game.scene.main.MainScene
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
 import kotlin.math.sqrt
 
 class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, IRecyclable {
@@ -56,7 +57,7 @@ class Arrow (gctx: GameContext): Sprite(gctx, R.mipmap.arrow), IBoxCollidable, I
         syncDstRect()
         if (x + height / 2f < 0f){
             val scene = gctx.scene as? MainScene ?: return
-            scene.world.remove(this, MainScene.Layer.ATTACK)
+            scene.world.remove(this, MainLayer.ATTACK)
         }
     }
     fun updateBox(target: Enemy){

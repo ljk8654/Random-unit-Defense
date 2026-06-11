@@ -12,6 +12,8 @@ import kr.ac.tukorea.ljk.randomunitdefence.game.objs.tower.RandomTower
 import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg.TiledBackground
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.WaveGen
+import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
+
 
 class MainScene(gctx: GameContext) : Scene(gctx){
     init {
@@ -24,23 +26,21 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         )
     }
 
-    enum class Layer{
-        BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH, EXPLOSION,
-    }
+
 
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     private var testFliesAdded = false
-    override var world = World(Layer.entries.toTypedArray()).apply{
+    override var world = World(MainLayer.entries.toTypedArray()).apply{
         add(
             TiledBackground(gctx, "map/stage1.tmj", tileWidth = 50f, tileHeight = 50f),
-            Layer.BG,
+            MainLayer.BG,
         )
-        add(CollisionChecker(gctx, this), Layer.CONTROLLER)
-        add(Archer(gctx, type = Archer.Type.RARE), Layer.TOWER)
-        add(Arrow(gctx), Layer.ATTACK)
-        add(RandomTower(gctx), Layer.TOUCH)
-        add(WaveGen(gctx, this),Layer.CONTROLLER)
+        add(CollisionChecker(gctx, this), MainLayer.CONTROLLER)
+        add(Archer(gctx, type = Archer.Type.RARE), MainLayer.TOWER)
+        add(Arrow(gctx), MainLayer.ATTACK)
+        add(RandomTower(gctx), MainLayer.TOUCH)
+        add(WaveGen(gctx, this),MainLayer.CONTROLLER)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -52,7 +52,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
                 draggingArcher?.isDrag = true
                 draggingArcher?.touch = true
 
-                world.add(newArcher, Layer.TOWER)
+                world.add(newArcher, MainLayer.TOWER)
             }
         }
         if (event.action == MotionEvent.ACTION_MOVE && draggingArcher?.touch == true){
