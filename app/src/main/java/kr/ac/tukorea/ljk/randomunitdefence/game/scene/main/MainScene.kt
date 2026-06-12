@@ -14,7 +14,6 @@ import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg.TiledBackground
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.WaveGen
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
-import android.graphics.RectF
 
 
 class MainScene(gctx: GameContext) : Scene(gctx){
@@ -28,16 +27,15 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         )
     }
 
-
     private val tiledMap = TiledMapLoader.load(gctx.view.context.assets, MAP_ASSET_PATH)
+    private val markerLayer = tiledMap.tileLayer(MARKER_LAYER_NAME)
+
     private var draggingArcher: Archer? = null
     override val clipsRect = true
     private var testFliesAdded = false
     private val touchPoint0 = PointF()
     private val touchPoint1 = PointF()
     private val mapPoint = PointF()
-    private val archerInstallRect = RectF()
-    private val existingArcherRect = RectF()
     override var world = World(MainLayer.entries.toTypedArray()).apply{
         add(
             TiledBackground(
@@ -64,7 +62,10 @@ class MainScene(gctx: GameContext) : Scene(gctx){
                 draggingArcher = newArcher
                 draggingArcher?.isDrag = true
                 draggingArcher?.touch = true
-
+                draggingArcher?.move_x = pt.x
+                draggingArcher?.move_y = pt.y
+                draggingArcher?.x = pt.x
+                draggingArcher?.y = pt.y
                 world.add(newArcher, MainLayer.TOWER)
             }
         }
@@ -78,7 +79,7 @@ class MainScene(gctx: GameContext) : Scene(gctx){
             val archer = draggingArcher ?: return true
             draggingArcher?.isDrag = false
             draggingArcher?.touch = false
-            if (hasOverlappingArcher(pt.x, pt.y, archer)) {
+            if ( !canInstallAt(pt.x, pt.y) || hasOverlappingArcher(pt.x, pt.y, archer)) {
                 world.remove(draggingArcher!!, MainLayer.TOWER)
             }
         }
@@ -94,36 +95,29 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     }
 
     private fun hasOverlappingArcher(x: Float, y: Float, self: Archer): Boolean {
-        archerInstallRect.set(
-            x - ARCHER_INSTALL_SIZE / 2f,
-            y - ARCHER_INSTALL_SIZE / 2f,
-            x + ARCHER_INSTALL_SIZE / 2f,
-            y + ARCHER_INSTALL_SIZE / 2f,
-        )
+
         val archers = world.objectsAt(MainLayer.TOWER)
         var index = 0
         while (index < archers.size) {
             val archer = archers[index] as? Archer
-            if (archer != null && archer !== self) {
-                existingArcherRect.set(
-                    archer.x - ARCHER_INSTALL_SIZE / 2f,
-                    archer.y - ARCHER_INSTALL_SIZE / 2f,
-                    archer.x + ARCHER_INSTALL_SIZE / 2f,
-                    archer.y + ARCHER_INSTALL_SIZE / 2f,
-                )
-                if (RectF.intersects(archerInstallRect, existingArcherRect)) {
-                    return true
-                }
-            }
+            if (archer != null && archer != self &&archer.intersectsIfInstalledAt(x, y)) return true
             index++
         }
         return false
     }
+    private fun canInstallAt(x: Float, y: Float): Boolean {
+        // 올해 버전에서는 Cannon 이 차지하는 2x2 영역을 검사하지 않고,
+        // snap 된 중심점이 속한 tile 하나만 Marker layer 에서 확인한다.
+        val tileX = (x / TILE_WIDTH).toInt()
+        val tileY = (y / TILE_HEIGHT).toInt()
+        val gid = markerLayer.tileAt(tileX, tileY)
 
+        return gid != 0
+    }
     companion object {
         private const val MAP_ASSET_PATH = "map/stage1.tmj"
         private const val TILE_WIDTH = 50f
         private const val TILE_HEIGHT = 50f
-        private const val ARCHER_INSTALL_SIZE = 50f
+        private const val MARKER_LAYER_NAME = "BuildArea"
     }
 }

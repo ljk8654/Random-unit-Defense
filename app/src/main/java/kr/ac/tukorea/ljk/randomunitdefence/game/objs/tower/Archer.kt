@@ -11,7 +11,7 @@ import kr.ac.tukorea.ljk.randomunitdefence.R
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.enemy.Enemy
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.mainWorld
-
+import kotlin.math.abs
 class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSprite(gctx, type.resId, 0f, 6), IBoxCollidable{
 
     enum class Type(
@@ -108,15 +108,6 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         super.draw(canvas)
     }
 
-    companion object{
-        private val rangeStrokePaint = Paint().apply {
-            color = Color.argb(120, 0, 255, 0)
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-        }
-        const val WIDTH = 90f
-        const val HEIGHT = 200f
-    }
 
     fun targetOn(enemy: Enemy) {
         if (isDrag) return
@@ -163,5 +154,22 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
             x + type.attackRadius,
             y + type.attackRadius
         )
+    }
+    fun intersectsIfInstalledAt(x: Float, y: Float): Boolean {
+        // 설치 위치는 MainScene 에서 tile 중심으로 snap 된 값만 들어온다.
+        // 새 Cannon 과 기존 Cannon 의 중심 차이가 x/y 양쪽 모두 BASE_SIZE 보다 작으면
+        // 두 100x100 설치 영역이 서로 겹친다고 판단할 수 있다.
+        return abs(this.x - x) < BASE_SIZE && abs(this.y - y) < BASE_SIZE
+    }
+
+    companion object{
+        private val rangeStrokePaint = Paint().apply {
+            color = Color.argb(120, 0, 255, 0)
+            style = Paint.Style.STROKE
+            strokeWidth = 4f
+        }
+        const val WIDTH = 90f
+        const val HEIGHT = 200f
+        private const val BASE_SIZE = 100f
     }
 }

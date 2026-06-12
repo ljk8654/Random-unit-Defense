@@ -31,6 +31,10 @@ data class TiledMap(
     fun firstTileLayer(): TiledLayer {
         return layers.first { it.type == "tilelayer" }
     }
+
+    fun tileLayer(name: String): TiledLayer {
+        return layers.first { it.type == "tilelayer" && it.name == name }
+    }
 }
 
 // Tiled 의 layer 중 type == "tilelayer" 인 항목을 위한 class 이다.
@@ -51,6 +55,7 @@ data class TiledLayer(
     val data: List<Int>,
 ) {
     fun tileAt(x: Int, y: Int): Int {
+        if (x !in 0 until width || y !in 0 until height) return -1
         return data[y * width + x]
     }
 }
