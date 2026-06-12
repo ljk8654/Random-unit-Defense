@@ -170,6 +170,7 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         }
         const val WIDTH = 90f
         const val HEIGHT = 200f
-        private const val BASE_SIZE = 100f
+        const val SIZE = 100f
+        private const val BASE_SIZE = SIZE
     }
 }

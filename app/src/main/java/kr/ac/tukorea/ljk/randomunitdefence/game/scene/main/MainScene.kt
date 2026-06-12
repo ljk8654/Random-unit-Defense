@@ -14,7 +14,7 @@ import kr.ac.tukorea.ljk.randomunitdefence.game.map.TiledMapLoader
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.bg.TiledBackground
 import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.WaveGen
 import kr.ac.tukorea.ljk.randomunitdefence.game.layer.MainLayer
-
+import kr.ac.tukorea.ljk.randomunitdefence.game.objs.contoller.Selection
 
 class MainScene(gctx: GameContext) : Scene(gctx){
     init {
@@ -29,6 +29,8 @@ class MainScene(gctx: GameContext) : Scene(gctx){
 
     private val tiledMap = TiledMapLoader.load(gctx.view.context.assets, MAP_ASSET_PATH)
     private val markerLayer = tiledMap.tileLayer(MARKER_LAYER_NAME)
+    private val selection = Selection(gctx, Archer.SIZE, Archer.SIZE)
+
 
     private var draggingArcher: Archer? = null
     override val clipsRect = true
@@ -36,6 +38,8 @@ class MainScene(gctx: GameContext) : Scene(gctx){
     private val touchPoint0 = PointF()
     private val touchPoint1 = PointF()
     private val mapPoint = PointF()
+    private var isDragging = false
+    private var wasMultiTouch = false
     override var world = World(MainLayer.entries.toTypedArray()).apply{
         add(
             TiledBackground(
@@ -52,11 +56,15 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         add(Arrow(gctx), MainLayer.ATTACK)
         add(RandomTower(gctx), MainLayer.TOUCH)
         add(WaveGen(gctx, this),MainLayer.CONTROLLER)
+        add(selection, MainLayer.SELECTOR)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val pt = gctx.metrics.fromScreen(event.x,event.y)
         if (event.action == MotionEvent.ACTION_DOWN) {
+            wasMultiTouch = false
+            isDragging = false
+
             if (pt.x in RandomTower.Companion.move_x- RandomTower.Companion.WIDTH/2 .. RandomTower.Companion.move_x + RandomTower.Companion.WIDTH/2 && pt.y in RandomTower.Companion.move_y - RandomTower.Companion.HEIGHT/2 .. RandomTower.Companion.move_y + RandomTower.Companion.HEIGHT/2){
                 val newArcher = Archer(gctx, type = Archer.Type.RARE)
                 draggingArcher = newArcher
@@ -68,18 +76,25 @@ class MainScene(gctx: GameContext) : Scene(gctx){
                 draggingArcher?.y = pt.y
                 world.add(newArcher, MainLayer.TOWER)
             }
+            updateSelection(pt.x, pt.y)
         }
-        if (event.action == MotionEvent.ACTION_MOVE && draggingArcher?.touch == true){
+        if (event.action == MotionEvent.ACTION_MOVE
+            ){
+            if(draggingArcher?.touch == true){
             draggingArcher?.move_x = pt.x
             draggingArcher?.move_y = pt.y
             draggingArcher?.x = pt.x
             draggingArcher?.y = pt.y
+            }
+            isDragging = true
+            updateSelection(pt.x,pt.y)
         }
         if (event.action == MotionEvent.ACTION_UP){
+            selection.hide()
             val archer = draggingArcher ?: return true
             draggingArcher?.isDrag = false
             draggingArcher?.touch = false
-            if ( !canInstallAt(pt.x, pt.y) || hasOverlappingArcher(pt.x, pt.y, archer)) {
+            if ( !canInstallAt(pt.x, pt.y) || hasOverlappingArcher(pt.x, pt.y)) {
                 world.remove(draggingArcher!!, MainLayer.TOWER)
             }
         }
@@ -94,13 +109,13 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         return (mapY / TILE_HEIGHT).toInt() * TILE_HEIGHT + TILE_HEIGHT / 2f
     }
 
-    private fun hasOverlappingArcher(x: Float, y: Float, self: Archer): Boolean {
+    private fun hasOverlappingArcher(x: Float, y: Float): Boolean {
 
         val archers = world.objectsAt(MainLayer.TOWER)
         var index = 0
-        while (index < archers.size) {
+        while (index < archers.size-1) {
             val archer = archers[index] as? Archer
-            if (archer != null && archer != self &&archer.intersectsIfInstalledAt(x, y)) return true
+            if (archer != null  &&archer.intersectsIfInstalledAt(x, y)) return true
             index++
         }
         return false
@@ -113,6 +128,9 @@ class MainScene(gctx: GameContext) : Scene(gctx){
         val gid = markerLayer.tileAt(tileX, tileY)
 
         return gid != 0
+    }
+    private fun updateSelection(x: Float, y: Float) {
+        selection.moveTo(x, y, canInstallAt(x, y) && !hasOverlappingArcher(x, y))
     }
     companion object {
         private const val MAP_ASSET_PATH = "map/stage1.tmj"

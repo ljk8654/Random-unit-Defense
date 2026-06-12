@@ -3,7 +3,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 enum class MainLayer{
-    BG, TOWER, ATTACK, ENEMY, CONTROLLER, TOUCH, EXPLOSION,
+    BG, TOWER, ATTACK, ENEMY, SELECTOR, CONTROLLER, TOUCH, EXPLOSION,
 }
 
 @Suppress("UNCHECKED_CAST")
