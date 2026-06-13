@@ -101,8 +101,10 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
         syncDstRect()
     }
 
-    override fun draw(canvas: Canvas) {
+    fun drawRange(canvas: Canvas){
         canvas.drawCircle(x, y, type.attackRadius, rangeStrokePaint)
+    }
+    override fun draw(canvas: Canvas) {
         updateCollisionRect()
         syncDstRect()
         super.draw(canvas)
@@ -115,6 +117,10 @@ class Archer (gctx: GameContext, private val type: Type = Type.NORMAL): AnimSpri
             fps = 5f / type.attackInterval
             this.enemy = enemy
         }
+    }
+
+    fun uninstall() {
+        gctx.mainWorld().remove(this, MainLayer.TOWER)
     }
 
     private fun attack(gctx: GameContext, enemy: Enemy) {
